@@ -1,0 +1,17 @@
+{
+  "name": "node-angular-travel",
+  "version": "1.0.0",
+  "description": "This is the node/angular travel app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "method-override": "^2.3.5",
+    "mongodb": "^2.0.45"
+  }
+}
