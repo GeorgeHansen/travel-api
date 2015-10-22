@@ -7,10 +7,13 @@
 // modules =========================================================
 var express 		= require('express');
 var app 			= express();
-var mongoClient = require('mongodb').MongoClient;
+var MongoClient = require('mongodb').MongoClient;
+//var mongoose = require('mongoose');
 
 //config files
-var database = require('./config/database');
+var database = require('./config/database.js');
+
+
 
 //app port
 var port = process.env.PORT || 3000;
@@ -23,9 +26,14 @@ app.get('/',function(request, response){
 
 app.get('/countries', function(req,res)
 {
-	mongoClient.connect(database, function(err, db)
+	MongoClient.connect(database.url, function(err, db)
 	{
-		var collection = db.collection('countries');
+		if(err)
+		{
+			console.log(err);
+		}
+	
+		var collection = db.collection('countries');		
 
 		collection.find().toArray(function(err,result)
 		{
@@ -36,6 +44,7 @@ app.get('/countries', function(req,res)
 
 	});
 })
+
 app.listen(port);
 
 
