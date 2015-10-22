@@ -1,7 +1,7 @@
 //db configuration to go here. Not sure what is necessary other than url
 
 module.exports = {
-	url : 'mongodb://travelDB:rTAZUb3JHNYFUYKGgXks5n1r7jX_JefpENj5fetWqN8-@ds042898.mongolab.com:42898/travelDB'
+	url : process.env.DB_URL //|| link to local db
 }
 
 
