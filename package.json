@@ -6,13 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Nicholas, Martin",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
-    "method-override": "^2.3.5",
-    "mongodb": "^2.0.45",
-    "mongoose": "^4.1.12"
+    "mongodb": "^2.0.47"
   }
 }

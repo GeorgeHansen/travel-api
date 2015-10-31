@@ -11,6 +11,7 @@ var bodyParser      = require('body-parser');
 //Routes   =========================================================
 var countries       = require('./routes/countries.js');
 
+app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({
     extended: true
