@@ -129,7 +129,7 @@ router.route('/countries')
 
     });
 /**
- * @api {get} /api/countries/:id Get Country
+ * @api {get} /countries/:id Get Country
  * @apiName GetCountry
  * @apiGroup Countries
  * @apiVersion 0.0.1

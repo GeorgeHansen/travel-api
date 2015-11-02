@@ -1,5 +1,33 @@
 [
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./public/main.js",
+    "group": "C__Users_Nicholas_Desktop_Node_Node_Angular_Travel_public_main_js",
+    "groupTitle": "C__Users_Nicholas_Desktop_Node_Node_Angular_Travel_public_main_js",
+    "name": ""
+  },
+  {
     "type": "delete",
     "url": "countries/:id",
     "title": "Delete Country",
@@ -115,7 +143,7 @@
   },
   {
     "type": "get",
-    "url": "/api/countries/:id",
+    "url": "/countries/:id",
     "title": "Get Country",
     "name": "GetCountry",
     "group": "Countries",

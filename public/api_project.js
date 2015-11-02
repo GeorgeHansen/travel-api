@@ -1,12 +1,12 @@
 define({
-  "name": "Travel Thingy API",
+  "name": "Travel API",
   "version": "1.0.0",
-  "description": "This is the API for the Travel-Thingy(c) for the Node/Angular elective",
+  "description": "Travel API for the node/angular elective.",
   "sampleUrl": false,
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2015-10-31T21:46:41.945Z",
+    "time": "2015-11-02T19:23:28.981Z",
     "url": "http://apidocjs.com",
     "version": "0.13.1"
   }
