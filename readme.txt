@@ -6,6 +6,9 @@ https://scotch.io/tutorials/node-and-angular-to-do-app-application-organization-
 Deploying mean app to azure
 http://adam-back.azurewebsites.net/deploy-a-mean-app-on-azure/
 
+Mongoose tutorial
+https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
+
 To install plugins for sublimeText
 First install package control
 https://packagecontrol.io/installation#st2

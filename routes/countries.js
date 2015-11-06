@@ -1,20 +1,33 @@
 //countries.js
 
+
+
+//http://pixelhandler.com/posts/develop-a-restful-api-using-nodejs-with-express-and-mongoose
+// modules =========================================================
+
 var express = require('express');
 var app = express();
-var MongoClient = require('mongodb').MongoClient;
-var ObjectID = require('mongodb').ObjectID;
+//var MongoClient     = require('mongodb').MongoClient;
+var mongoose = require('mongoose');
+// var ObjectID = require('mongodb').ObjectID;
 
 var bodyParser = require('body-Parser');
 var router = express.Router();
+var Country = require('../models/country');
 
+
+
+//do we need this here?
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
 
+
 //config files
 var database = require('../config/database.js');
+
+mongoose.connect(database.url);
 
 
 /**
@@ -61,25 +74,20 @@ var database = require('../config/database.js');
  *
  */
 router.route('/countries')
+    //TODO Perhaps find a way not to display the __v
     .get(function(req, res) {
-        MongoClient.connect(database.url, function(err, db) {
-            if (err) {
-                res.status(500).send({
-                    "message": "Internal Server Error"
-                });
+
+        return Country.find(function(err, countries) {
+            if (!err) {
+                return res.json(countries);
+            } else {
+                console.log(err);
+                return res.status()
             }
-
-            var collection = db.collection('countries');
-
-            collection.find().toArray(function(err, result) {
-                res.json(result);
-            });
-
-
-
         });
+
     })
-     /**
+    /**
      * @api {post} /countries/ Create Country
      * @apiName createCountry
      * @apiGroup Countries
@@ -109,25 +117,35 @@ router.route('/countries')
      *    
      */
 
-    .post(function(req, res) {
-        MongoClient.connect(database.url, function(err, db) {
+.post(function(req, res) {
 
-            var collection = db.collection('countries');
+    var country;
+    console.log(req.body);
 
-            collection.insert(req.body, function(err, result) {
-
-                res.status(201);
-                res.location(/countries/ + result.insertedIds.toString()); //what does this do?
-
-                res.json({
-                    "message": "country added"
-                });
-                db.close();
-
-            });
-        });
+    country = new Country({
+        name: req.body.name,
+        size: req.body.size,
+        population: req.body.population,
+        language: req.body.language,
+        donkey: req.body.donkey
 
     });
+
+    country.save(function(err) {
+        if (!err) {
+            res.json({
+                "message": "country created"
+            })
+            res.status(201);
+            console.log("country created");
+        } else {
+            console.log(err);
+        }
+    });
+
+
+
+});
 /**
  * @api {get} /countries/:id Get Country
  * @apiName GetCountry
@@ -164,123 +182,103 @@ router.route('/countries')
  * @apiError 404 Country Not Found
  *
  * @apiError (Error 5xx) 500 Internal Server Error 
- */
+ **/
+
 router.route('/countries/:id')
-    .get(function(req, res) {
 
-        MongoClient.connect(database.url, function(err, db) {
+.get(function(req, res) {
 
-            if (err) {
-                res.status(500).send({
-                    "message": "Internal Server Error"
-                });
-            };
+    Country.findById(req.params.id, function(err, country)
+    {
+        if(!err)
+        {
+            console.log("well done, country found" + country.name);
+            return res.json(country);
+        }
+        else{
+            console.log(err);
+            return res.status(404);
+        }
+    });
+})
 
-            var collection = db.collection('countries');
-
-            collection.findOne({
-                    '_id': ObjectID(req.params.id)
-                },
-                function(err, result) {
-
-                    if (err) {
-                        res.status(500).send({
-                            "message": "Internal Server Error"
-                        });
-                    } else if (result === null) {
-                        res.status(404).send({
-                            "msg": "404 country not found"
-                        });
-                    } else {
-                        res.status(200); //ok
-                        res.json(result);
-
-                    }
-
-                    db.close();
-
-                });
-        });
-    })
-/**
- * @api {put} countries/:id Update Country
- * @apiName UpdateCountry
- * @apiGroup Countries
- * @apiVersion 0.0.1
- * @apiDescription Can update a specific country by supplying it's ID. In the method body include the fields you want updated. Only supplying the field you want updated will not delete the other fields. 
- *
- * @apiParam {ObjectId} id Country unique ID.
- *
- * @apiSuccess (Success 201) 201 Country Created
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 201 Created 
- *     Location : country/<ObjectId>
- *     {
- *       "message": "Country edited"
- *     }
- * 
- */
-    .put(function(req, res) {
-        MongoClient.connect(database.url, function(err, db) {
-
-            var collection = db.collection('countries');
-
-            collection.update(
-            {
-                '_id': ObjectID(req.params.id)
-                }, {
-                    $set: req.body
-                },
-
-                function(err, result) {
-                    // response to the browser
-
-                    
-
-                    res.status(201);
-                    res.location(/countries/ + ObjectID(req.params.id));
-                    res.json({
-                        "message": "Country edited"
-                    });
-                    db.close();
-                });
-        });
-    })
     /**
-     * @api {delete} countries/:id Delete Country
-     * @apiName DeleteCountry
+     * @api {put} countries/:id Update Country
+     * @apiName UpdateCountry
      * @apiGroup Countries
      * @apiVersion 0.0.1
-     * @apiDescription Deletes the country with the ID specified
+     * @apiDescription Can update a specific country by supplying it's ID. In the method body include the fields you want updated. Only supplying the field you want updated will not delete the other fields. 
      *
      * @apiParam {ObjectId} id Country unique ID.
      *
-     * @apiSuccess (Success 202) 202 Accepted
+     * @apiSuccess (Success 201) 201 Country Created
      *
-
-
-     *
+     * @apiSuccessExample {json} Success-Response:
+     *     HTTP/1.1 201 Created 
+     *     Location : country/<ObjectId>
+     *     {
+     *       "message": "Country edited"
+     *     }
+     * 
      */
-    .delete(function(req, res) {
-        MongoClient.connect(database.url, function(err, db) {
 
-            var collection = db.collection('countries');
-            collection.remove({
-                '_id': ObjectID(req.params.id)
-            }, function(err, result) {
+.put(function(req, res) {
+
+
+   console.log(req.params.id + " | The id from req.params.id");
+
+   //can use req.body but it still won't save things that aren't in the country model. Will save the other changes though. 
+   //Doesn't feel like the right way to do it, but it's still enforcing the country schema. 
+   Country.findOneAndUpdate({_id: req.params.id}, req.body,
+    function(err, country)
+    {
+        if(!err)
+        {
+            console.log("Attempt to edit: " + country.name);
+            res.status(200);
+            return res.json({"message": country.name + " has been edited"});
+
+        }
+        else{
+            console.log(err);
+            res.status(500);
+            return res.json({"message" : "Internal Server Error"});
+        }
+   });
+
+})
+
+/**
+ * @api {delete} countries/:id Delete Country
+ * @apiName DeleteCountry
+ * @apiGroup Countries
+ * @apiVersion 0.0.1
+ * @apiDescription Deletes the country with the ID specified
+ *
+ * @apiParam {ObjectId} id Country unique ID.
+ *
+ * @apiSuccess (Success 202) 202 Accepted
+ */
+.delete(function(req, res) {    
+
+    Country.findById(req.params.id, function(err, country)
+    {
+
+        country.remove(function(err)
+        {
+            if(!err){
+                console.log("The Country " + country.name + " has been removed");
                 res.status(202);
-                res.json({
-                    'message': 'country deleted'
-                });
-                db.close();
-            });
+                res.json({"message" : "Country " +  country.name + " has been removed"});
+            }
+            else{
+                console.log(err);
+            }
         });
     });
+    
 
-
-
-
+});
 
 
 
