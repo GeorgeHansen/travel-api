@@ -32,16 +32,18 @@ mongoose.connect(database.url);
  * @api {get} /countries/ Get all Countries
  * @apiName GetAllCountries
  * @apiGroup Countries
- * @apiDescription Is used to get all the countries currently listed in the database in JSON format
- * @apiVersion 0.0.2
+ * @apiDescription Is used to get all the countries currently listed in the database in JSON format. 
+ * Tracks are stored in the DB as a reference but the tables are joined and data displayed as part of the country.
+ * Donkey's have been removed. Description and Tracks added. You can now store multiple Languages per country. 
+ * @apiVersion 0.1.0
  *
  * @apiSuccess {ID} id ID of the country
  * @apiSuccess {String} name  Name of the Country.
  * @apiSuccess {Number} size Size of the Country. Arbitrary. 
  * @apiSuccess {Number} population Population size of the Country.
- * @apiSuccess {String} language Language they speak in the Country.
- * @apiSuccess {String} donkey Random name of a donkey.
- *
+ * @apiSuccess {String[]} languages Languages they speak in the Country.
+ * @apiSuccess {String} description Short Description of the Country.
+ * @apiSuccess {Object[]} tracks contains the track objects related to this country. 
  * 
  *
  * @apiSuccessExample {json} Success-Response:
@@ -51,23 +53,22 @@ mongoose.connect(database.url);
  *
  *      "_id": "5628d0e8e4b0e09ab41e256c",
  *      "name": "Denmark",
- *       "size": ​3,
+ *      "size": ​3,
  *      "population": ​90,
- *      "language": "Danish",
- *      "donkey": "æsel"
- *  },
- *  {
+ *       "description": "This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty.",
+ *      "languages": ["Danish", "Swedish"],
+ *      "tracks" : [{
+ *          "_id": "56436159e4b0ecb0579e3913",
+ *          "sport": "Biking",
+ *          "trackName": "fynskoven",
+ *          "trackType": "Forest",
+ *          "region": "Fyn",
+ *          "trackRating": ​8,
+ *          "km": ​36
  *
- *      "_id": "5628d153e4b0e09ab41e25b6",
- *      "name": "Belgium",
- *      "size": ​1,
- *      "population": ​2,
- *      "language": "Belgiumish",
- *      "donkey": "Grand Noir du Berry" 
+ * }]
  *
- *   }
- *   
- *]
+ *
  * @apiError (Error 5xx) 500 Internal Server Error 
  * @apiErrorExample {json} Error-Response:
  *      HTTP/1.1 500 Internal Server Error
@@ -192,22 +193,31 @@ router.route('/countries')
  * @apiSuccess {Number} population Population size of the Country.
  * @apiSuccess {String[]} language Array of Languages they speak in that Country.
  * @apiSuccess {String} donkey Random name of a donkey.
- * @apiSuccess {Object[]} 
+ * @apiSuccess {Object[]} tracks contains the track objects related to this country. 
  *
  * @apiSuccess (Success 304) 304 Not Modified
  *  
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *  {
+ * [
+ *   {
  *
  *      "_id": "5628d0e8e4b0e09ab41e256c",
  *      "name": "Denmark",
- *       "size": ​3,
+ *      "size": ​3,
  *      "population": ​90,
- *      "language": "Danish",
- *      "donkey": "æsel"
- *  }
- 
+ *       "description": "This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty.",
+ *      "languages": ["Danish", "Swedish"],
+ *      "tracks" : [{
+ *          "_id": "56436159e4b0ecb0579e3913",
+ *          "sport": "Biking",
+ *          "trackName": "fynskoven",
+ *          "trackType": "Forest",
+ *          "region": "Fyn",
+ *          "trackRating": ​8,
+ *          "km": ​36
+ *
+ * }] 
  * @apiSuccessExample {json} Success-Response (304):
  *     HTTP/1.1 304 Not Modified
  *
