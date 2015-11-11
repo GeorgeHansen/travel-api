@@ -95,8 +95,8 @@
     "title": "Get all Countries",
     "name": "GetAllCountries",
     "group": "Countries",
-    "description": "<p>Is used to get all the countries currently listed in the database in JSON format</p> ",
-    "version": "0.0.2",
+    "description": "<p>Is used to get all the countries currently listed in the database in JSON format. Tracks are stored in the DB as a reference but the tables are joined and data displayed as part of the country. Donkey's have been removed. Description and Tracks added. You can now store multiple Languages per country.</p> ",
+    "version": "0.1.0",
     "success": {
       "fields": {
         "Success 200": [
@@ -130,24 +130,31 @@
           },
           {
             "group": "Success 200",
-            "type": "<p>String</p> ",
+            "type": "<p>String[]</p> ",
             "optional": false,
-            "field": "language",
-            "description": "<p>Language they speak in the Country.</p> "
+            "field": "languages",
+            "description": "<p>Languages they speak in the Country.</p> "
           },
           {
             "group": "Success 200",
             "type": "<p>String</p> ",
             "optional": false,
-            "field": "donkey",
-            "description": "<p>Random name of a donkey.</p> "
+            "field": "description",
+            "description": "<p>Short Description of the Country.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Object[]</p> ",
+            "optional": false,
+            "field": "tracks",
+            "description": "<p>contains the track objects related to this country.</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n     \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n     \"name\": \"Denmark\",\n      \"size\": ​3,\n     \"population\": ​90,\n     \"language\": \"Danish\",\n     \"donkey\": \"æsel\"\n },\n {\n\n     \"_id\": \"5628d153e4b0e09ab41e25b6\",\n     \"name\": \"Belgium\",\n     \"size\": ​1,\n     \"population\": ​2,\n     \"language\": \"Belgiumish\",\n     \"donkey\": \"Grand Noir du Berry\" \n\n  }\n  \n]",
+          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n     \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n     \"name\": \"Denmark\",\n     \"size\": ​3,\n     \"population\": ​90,\n      \"description\": \"This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty.\",\n     \"languages\": [\"Danish\", \"Swedish\"],\n     \"tracks\" : [{\n         \"_id\": \"56436159e4b0ecb0579e3913\",\n         \"sport\": \"Biking\",\n         \"trackName\": \"fynskoven\",\n         \"trackType\": \"Forest\",\n         \"region\": \"Fyn\",\n         \"trackRating\": ​8,\n         \"km\": ​36\n\n}]",
           "type": "json"
         }
       ]
@@ -180,8 +187,8 @@
     "title": "Get Country",
     "name": "GetCountry",
     "group": "Countries",
-    "version": "0.0.2",
-    "description": "<p>by supplying a countries ID you will get all information available to said country. As there is no strucutre to the db you might get different info for different countries. That depends on what you put in.</p> ",
+    "version": "0.1.0",
+    "description": "<p>by supplying a countries ID you will get all information available to said country. update includes adding an array of languages. A description for the country and a list of tracks available for that country</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -228,10 +235,10 @@
           },
           {
             "group": "Success 200",
-            "type": "<p>String</p> ",
+            "type": "<p>String[]</p> ",
             "optional": false,
             "field": "language",
-            "description": "<p>Language they speak in the Country.</p> "
+            "description": "<p>Array of Languages they speak in that Country.</p> "
           },
           {
             "group": "Success 200",
@@ -239,6 +246,13 @@
             "optional": false,
             "field": "donkey",
             "description": "<p>Random name of a donkey.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Object[]</p> ",
+            "optional": false,
+            "field": "tracks",
+            "description": "<p>contains the track objects related to this country.</p> "
           }
         ],
         "Success 304": [
@@ -253,7 +267,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "   HTTP/1.1 200 OK\n{\n\n    \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n    \"name\": \"Denmark\",\n     \"size\": ​3,\n    \"population\": ​90,\n    \"language\": \"Danish\",\n    \"donkey\": \"æsel\"\n}",
+          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n     \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n     \"name\": \"Denmark\",\n     \"size\": ​3,\n     \"population\": ​90,\n      \"description\": \"This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty.\",\n     \"languages\": [\"Danish\", \"Swedish\"],\n     \"tracks\" : [{\n         \"_id\": \"56436159e4b0ecb0579e3913\",\n         \"sport\": \"Biking\",\n         \"trackName\": \"fynskoven\",\n         \"trackType\": \"Forest\",\n         \"region\": \"Fyn\",\n         \"trackRating\": ​8,\n         \"km\": ​36\n\n}]",
           "type": "json"
         },
         {
