@@ -23,7 +23,7 @@ var countrySchema = new Schema({
 	size: 		{  type: Number, min: 0, required: true},
 	population: {  type: Number, min: 0, required: true},
 	description:{  type: String, required: false},
-	languages:   [{ type: String, required: true}], //can enter multiple languages for this country
+	languages:  [{ type: String, required: true}], //can enter multiple languages for this country
 	tracks:  	[{ type: Schema.ObjectId, ref: 'Track', required: false}]
 
 },

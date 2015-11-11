@@ -80,9 +80,7 @@ router.route('/countries')
     .get(function(req, res) {
 
        Country.find(function(err, countries) {
-            if (!err) {
-                return res.json(countries);
-            } else {
+            if(err) {
                 console.log(err);
                 res.status(500);
                 return res.json({"message" : "Internal Server Error"});
@@ -98,17 +96,6 @@ router.route('/countries')
             }
 
         });
-
-
-        // Country.find(function(err, countries) {
-        //     if (!err) {
-        //         return res.json(countries);
-        //     } else {
-        //         console.log(err);
-        //         res.status(500);
-        //         return res.json({"message" : "Internal Server Error"});
-        //     }
-        // });
 
     })
     /**
