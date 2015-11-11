@@ -33,7 +33,7 @@ define({ "api": [
     "title": "Delete Country",
     "name": "DeleteCountry",
     "group": "Countries",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "<p>Deletes the country with the ID specified</p> ",
     "parameter": {
       "fields": {
@@ -58,7 +58,33 @@ define({ "api": [
             "description": "<p>Accepted</p> "
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 202 Created \nLocation : country/<ObjectId>\n{\n  \"message\": \"Country <countryName> has been removed\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 5xx": [
+          {
+            "group": "Error 5xx",
+            "optional": false,
+            "field": "500",
+            "description": "<p>Internal Server Error</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"message\" : \"Internal Server Error\"\n}",
+          "type": "json"
+        }
+      ]
     },
     "filename": "./routes/countries.js",
     "groupTitle": "Countries"
@@ -70,7 +96,7 @@ define({ "api": [
     "name": "GetAllCountries",
     "group": "Countries",
     "description": "<p>Is used to get all the countries currently listed in the database in JSON format</p> ",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "success": {
       "fields": {
         "Success 200": [
@@ -136,7 +162,14 @@ define({ "api": [
             "description": "<p>Internal Server Error</p> "
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"message\" : \"Internal Server Error\"\n}",
+          "type": "json"
+        }
+      ]
     },
     "filename": "./routes/countries.js",
     "groupTitle": "Countries"
@@ -147,7 +180,7 @@ define({ "api": [
     "title": "Get Country",
     "name": "GetCountry",
     "group": "Countries",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "<p>by supplying a countries ID you will get all information available to said country. As there is no strucutre to the db you might get different info for different countries. That depends on what you put in.</p> ",
     "parameter": {
       "fields": {
@@ -259,7 +292,7 @@ define({ "api": [
     "title": "Update Country",
     "name": "UpdateCountry",
     "group": "Countries",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "<p>Can update a specific country by supplying it's ID. In the method body include the fields you want updated. Only supplying the field you want updated will not delete the other fields.</p> ",
     "parameter": {
       "fields": {
@@ -288,7 +321,26 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 Created \nLocation : country/<ObjectId>\n{\n  \"message\": \"Country edited\"\n}",
+          "content": "HTTP/1.1 201 Created \nLocation : country/<ObjectId>\n{\n  \"message\": \"<countryName> has been edited\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 5xx": [
+          {
+            "group": "Error 5xx",
+            "optional": false,
+            "field": "500",
+            "description": "<p>Internal Server Error</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"message\" : \"Internal Server Error\"\n}",
           "type": "json"
         }
       ]
@@ -302,9 +354,48 @@ define({ "api": [
     "title": "Create Country",
     "name": "createCountry",
     "group": "Countries",
-    "description": "<p>Is used to create a new country. You are not bound by the parameters described in the api. New fields can be created by including them in the method body. You can essentially just add any data you want and it'll be added to the database.</p> ",
-    "version": "0.0.1",
+    "description": "<p>Is used to create a new country. Fields other than those specified can be entered into the body but will not be saved to the database.</p> ",
+    "version": "0.0.2",
     "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Mandatory country name</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "size",
+            "description": "<p>Mandatory country size</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "population",
+            "description": "<p>Mandatory country population size</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "language",
+            "description": "<p>Mandatory country main language</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "donkey",
+            "description": "<p>Optional  country donkey</p> "
+          }
+        ]
+      },
       "examples": [
         {
           "title": "Post-Example:",
@@ -328,6 +419,25 @@ define({ "api": [
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 201 Created \nLocation : /countries/<ObjectId>\n{\n  \"message\": \"country added\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 5xx": [
+          {
+            "group": "Error 5xx",
+            "optional": false,
+            "field": "500",
+            "description": "<p>Internal Server Error</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"message\" : \"Internal Server Error\"\n}",
           "type": "json"
         }
       ]
