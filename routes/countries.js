@@ -80,23 +80,30 @@ router.route('/countries')
     
     .get(function(req, res) {
 
-       Country.find(function(err, countries) {
+       //Don't need the info for tracks available here. Will keep tracks in the countries to make
+       //querying them easier. 
+       Country.find({},'name size population description languages imageLocation',function(err, countries) {
             if(err) {
                 console.log(err);
                 res.status(500);
                 return res.json({"message" : "Internal Server Error"});
             }
-        })
-        .populate('tracks')
-        .exec(function(err, tracks)
-        {
-            if(err){console.log(err);}
-            else{
-                
-                return res.json(tracks); 
+            else
+            {
+                return res.json(countries);
             }
-
         });
+
+        // .populate('tracks')
+        // .exec(function(err, tracks)
+        // {
+        //     if(err){console.log(err);}
+        //     else{
+                
+        //         return res.json(tracks); 
+        //     }
+
+        // });
 
     })
     /**
@@ -151,7 +158,8 @@ router.route('/countries')
         population: req.body.population,
         languages: req.body.languages,
         description: req.body.description,
-        tracks: req.body.tracks        
+        tracks: req.body.tracks,
+        imageLocation: req.body.imageLocation     
 
     });
 
@@ -231,12 +239,16 @@ router.route('/countries/:id')
 .get(function(req, res) {
 
     var country;
-    Country.findOne({_id : req.params.id}, function(err)
+
+    Country.findOne({_id : req.params.id},'name size population description languages imageLocation', function(err,country)
     {
         if(err){
             console.log(err);
             res.status(404);
             return res.json({"message " : "Country not found"})
+        }
+        else{
+            res.json(country);
         }
     })
     //Currently the tracks in the country is filled with objectId references. The populate method
@@ -372,9 +384,40 @@ router.route('/countries/:id')
 
         
     });
-    
 
 });
+
+router.route('/countries/:id/tracks')
+    
+    .get(function(req,res)
+    {
+        console.log("in the get function");
+         Country.findOne({_id : req.params.id}, 'tracks', function(err,country)
+        {
+            
+            if(err){
+                console.log(err);
+                res.status(404);
+                return res.json({"message " : "Country not found"})
+            }
+           
+        })
+    //Currently the tracks in the country is filled with objectId references. The populate method
+    //will perform an application level join and fill the array with track objects. 
+    //Essentially it joins the collections and selects everything from the two tables. 
+        .populate('tracks')
+        .exec(function(err, track)
+        {
+            if(err){console.log(err);}
+            else{
+                console.log("country selected " + track.name);
+                //this is somewhat misleading. It will return the country + the data from the tracks. 
+                return res.json(track); 
+            }
+
+        });
+
+    });
 
 
 

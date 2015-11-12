@@ -1,6 +1,9 @@
 //track.js
+// =========================  NOTES =========================================
 
-// modules =========================================================
+
+
+// modules ==================================================================
 var mongoose 		= require('mongoose');
 var Schema			= mongoose.Schema;
 
@@ -10,8 +13,9 @@ var trackSchema = new Schema({
 	trackName:	{ type: String, required: true},
 	trackType:	{ type: String, required: true},
 	region: 	{ type: String, required: true},
-	trackRating:{ type: Number, required: false},
-	km: 		{ type: Number, min: 0, required: false} 
+	trackRating:{ type: Number, min:0, max:10, required: false},
+	km: 		{ type: Number, min: 0, required: false},
+	countryId: 	{ type: Schema.ObjectId, ref: 'Country', required: false}
 
 
 },

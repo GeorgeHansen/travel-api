@@ -16,7 +16,6 @@
 	http://blog.mongodb.org/post/87200945828/6-rules-of-thumb-for-mongodb-schema-design-part-1
 
 	Very good read on designing schema's in mongodb
-	
 
 */
 
@@ -27,10 +26,9 @@ module.exports = {
 
 	//other two should work as well. No idea why they arent. 
 	//url : process.env.DB_URL 
-	//url = 'mongodb://travel-kea:travel-kea1@ds042898.mongolab.com:42898/travelDB';
+	//url = 'mongodb://stark-fjord1:travel-kea1@ds042898.mongolab.com:42898/travelDB';
 	
 }
 
-//DB_URL is an environmental variable we set up on azure to refer to the travel db.
 
 

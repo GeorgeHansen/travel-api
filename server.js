@@ -7,7 +7,7 @@
 
 /*  MODULES
 
-    1.)CORS - Cross-OriginResource sharing
+    1.)CORS - Cross-Origin Resource sharing
 
     Description: 
     enabling Cross-OriginResource sharing (CORS) is what allows certain resources (in our case the api) to be requested
@@ -19,7 +19,8 @@
 
     2.) Express -
 
-    Description: Web framework for Node. Use it primarily for routing and enabling middleware
+    Description: Web framework for Node. Use it primarily for routing and enabling middleware. Also functions
+    as the server I think. 
 
     More info:
     http://expressjs.com
@@ -42,6 +43,7 @@ var bodyParser      = require('body-parser');
 var cors            = require('cors');
 //Route Requires====================================================
 var countries       = require('./routes/countries.js');
+var tracks          = require('./routes/tracks.js');
 
 
 //Middleware Mounting ==============================================
@@ -53,17 +55,14 @@ app.use(cors());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 
 
 //Mounting routes ==================================================
     //Presumably counts as middleware because it mounts a router object?
 
 app.use(countries);
-
-
-
-
+app.use(tracks);
 
 
 var port = process.env.PORT || 3000;
