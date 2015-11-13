@@ -39,6 +39,24 @@ router.route('/tracks')
         });
     });
 
+    
+router.route('/tracks/country/:countryId/')
+
+.get(function(req, res)
+{
+    Track.find({}).where("countryId =="+ req.params.countryId)    
+    .exec(function(err,tracks)
+    {
+        if(err)
+        {
+            return res.json(err);
+        }
+        else{
+            return res.json(tracks);
+        }
+    });
+});
+
 router.route('/tracks/:id/')
 
     .get(function(req, res)
@@ -58,22 +76,7 @@ router.route('/tracks/:id/')
         });
     });
 
-router.route('/tracks/country/:countryId/')
 
-    .get(function(req, res)
-    {
-        Track.find({}).select({"countryId" : req.params.countryId})
-        .exec(function(err,tracks)
-        {
-            if(err)
-            {
-                return res.json(err);
-            }
-            else{
-                return res.json(tracks);
-            }
-        });
-    });
 
 
 
