@@ -39,12 +39,13 @@ router.route('/tracks')
         });
     });
 
-    
+
 router.route('/tracks/country/:countryId/')
 
 .get(function(req, res)
 {
-    Track.find({}).where("countryId =="+ req.params.countryId)    
+    //there is probably a better way to do the where clause. Using where then .equals didnt seem to work though
+    Track.find({}).where("countryId =="+ req.params.countryId)   
     .exec(function(err,tracks)
     {
         if(err)

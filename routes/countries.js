@@ -240,7 +240,8 @@ router.route('/countries/:id')
 
     var country;
 
-    Country.findOne({_id : req.params.id},'name size population description languages imageLocation', function(err,country)
+    //can simply select the fields by typing them, or disclude fields by typing the - in front of the field name. 
+    Country.findOne({_id : req.params.id},'-tracks', function(err,country)
     {
         if(err){
             console.log(err);
@@ -254,17 +255,17 @@ router.route('/countries/:id')
     //Currently the tracks in the country is filled with objectId references. The populate method
     //will perform an application level join and fill the array with track objects. 
     //Essentially it joins the collections and selects everything from the two tables. 
-    .populate('tracks')
-    .exec(function(err, track)
-    {
-        if(err){console.log(err);}
-        else{
-            console.log("country selected " + track.name);
-            //this is somewhat misleading. It will return the country + the data from the tracks. 
-            return res.json(track); 
-        }
+    // .populate('tracks')
+    // .exec(function(err, track)
+    // {
+    //     if(err){console.log(err);}
+    //     else{
+    //         console.log("country selected " + track.name);
+    //         //this is somewhat misleading. It will return the country + the data from the tracks. 
+    //         return res.json(track); 
+    //     }
 
-    });
+    // });
 })
 
     /**
