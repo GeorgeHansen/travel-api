@@ -392,31 +392,47 @@ router.route('/countries/:id/tracks')
     
     .get(function(req,res)
     {
-        console.log("in the get function");
-         Country.findOne({_id : req.params.id}, 'tracks', function(err,country)
+     
+         Track.find({}).where("countryId =="+ req.params.countryId)   
+        .exec(function(err,tracks)
         {
-            
-            if(err){
-                console.log(err);
-                res.status(404);
-                return res.json({"message " : "Country not found"})
+            if(err)
+            {
+                return res.json(err);
             }
+            else{
+                return res.json(tracks);
+            }
+        });
+
+
+
+
+
+        //  Country.findOne({_id : req.params.id}, 'tracks', function(err,country)
+        // {
+            
+        //     if(err){
+        //         console.log(err);
+        //         res.status(404);
+        //         return res.json({"message " : "Country not found"})
+        //     }
            
-        })
+        // })
     //Currently the tracks in the country is filled with objectId references. The populate method
     //will perform an application level join and fill the array with track objects. 
     //Essentially it joins the collections and selects everything from the two tables. 
-        .populate('tracks')
-        .exec(function(err, track)
-        {
-            if(err){console.log(err);}
-            else{
-                console.log("country selected " + track.name);
-                //this is somewhat misleading. It will return the country + the data from the tracks. 
-                return res.json(track); 
-            }
+        // .populate('tracks')
+        // .exec(function(err, track)
+        // {
+        //     if(err){console.log(err);}
+        //     else{
+        //         console.log("country selected " + track.name);
+        //         //this is somewhat misleading. It will return the country + the data from the tracks. 
+        //         return res.json(track); 
+        //     }
 
-        });
+        // });
 
     });
 
