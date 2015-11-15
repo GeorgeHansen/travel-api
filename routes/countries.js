@@ -392,10 +392,22 @@ router.route('/countries/:id/tracks')
     
     .get(function(req,res)
     {
-     
-         Track.find({}).where("countryId =="+ req.params.countryId)   
-        .exec(function(err,tracks)
-        {
+        console.log(req.params.id);
+        // Track.where('track.countryId')
+        // .equals(req.params.id)
+        // .exec(function(err,tracks)
+        // {
+        //     if(err)
+        //     {
+        //         return res.json(err);
+        //     }
+        //     else{
+        //         return res.json(tracks);
+        //     }
+        // });
+
+         Track.find({countryId : req.params.id }, function(err, tracks)
+         {
             if(err)
             {
                 return res.json(err);
@@ -403,7 +415,18 @@ router.route('/countries/:id/tracks')
             else{
                 return res.json(tracks);
             }
-        });
+         });
+
+        // .exec(function(err,tracks)
+        // {
+        //     if(err)
+        //     {
+        //         return res.json(err);
+        //     }
+        //     else{
+        //         return res.json(tracks);
+        //     }
+        // });
 
 
 
