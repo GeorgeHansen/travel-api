@@ -33,40 +33,38 @@ mongoose.connect(database.url);
  * @apiName GetAllCountries
  * @apiGroup Countries
  * @apiDescription Is used to get all the countries currently listed in the database in JSON format. 
- * Tracks are stored in the DB as a reference but the tables are joined and data displayed as part of the country.
- * Donkey's have been removed. Description and Tracks added. You can now store multiple Languages per country. 
- * @apiVersion 0.1.0
+ * Tracks are no longer stored in countries. Instead you can find a reference to the country it belongs to in /tracks
+ * Donkey's have been removed. Description and Imagelocation added. You can store multiple Languages per country. 
+ * @apiVersion 0.2.0
  *
- * @apiSuccess {ID} id ID of the country
+ * @apiSuccess {ID} id ID of the country.
  * @apiSuccess {String} name  Name of the Country.
- * @apiSuccess {Number} size Size of the Country. Arbitrary. 
- * @apiSuccess {Number} population Population size of the Country.
- * @apiSuccess {String[]} languages Languages they speak in the Country.
+ * @apiSuccess {Number} size Size of the Country in km2. 
+ * @apiSuccess {Number} population Number of people living in the country.
  * @apiSuccess {String} description Short Description of the Country.
- * @apiSuccess {Object[]} tracks contains the track objects related to this country. 
+ * @apiSuccess {String} Location of the countries flag on the server. 
+ * @apiSuccess {String[]} languages Languages they speak in the Country.
  * 
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  * [
  *   {
+ * 
+ *   "_id": "5628d0e8e4b0e09ab41e256c",
+ *  "name": "Denmark",
+ *  "size": ​42915,
+ *   "population": ​5678348,
+ *  "description": "This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty. Test ",
+ *   "imageLocation": "http://travel-project.azurewebsites.net/img/countries/denmark-flag.jpg",
+ *   "languages": 
  *
- *      "_id": "5628d0e8e4b0e09ab41e256c",
- *      "name": "Denmark",
- *      "size": ​3,
- *      "population": ​90,
- *       "description": "This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty.",
- *      "languages": ["Danish", "Swedish"],
- *      "tracks" : [{
- *          "_id": "56436159e4b0ecb0579e3913",
- *          "sport": "Biking",
- *          "trackName": "fynskoven",
- *          "trackType": "Forest",
- *          "region": "Fyn",
- *          "trackRating": ​8,
- *          "km": ​36
+ *   [
+ *       "Danish"
+ *   ]
  *
- * }]
+ *   }
+ * ]
  *
  *
  * @apiError (Error 5xx) 500 Internal Server Error 
@@ -80,9 +78,11 @@ router.route('/countries')
     
     .get(function(req, res) {
 
-       //Don't need the info for tracks available here. Will keep tracks in the countries to make
-       //querying them easier. 
-       Country.find({},'name size population description languages imageLocation',function(err, countries) {
+
+       //Have tracks in the schema from a previous version. We don't want to display them.
+       //A better solution would be to use the version key mongoose uses.
+       //This way we'd only display countries from a certain db version.  
+       Country.find({},'-tracks',function(err, countries) {
             if(err) {
                 console.log(err);
                 res.status(500);
@@ -90,20 +90,13 @@ router.route('/countries')
             }
             else
             {
+                res.status(200);
                 return res.json(countries);
             }
         });
 
-        // .populate('tracks')
-        // .exec(function(err, tracks)
-        // {
-        //     if(err){console.log(err);}
-        //     else{
-                
-        //         return res.json(tracks); 
-        //     }
 
-        // });
+        
 
     })
     /**
@@ -111,22 +104,25 @@ router.route('/countries')
      * @apiName createCountry
      * @apiGroup Countries
      * @apiDescription Is used to create a new country. 
-     * Fields other than those specified can be entered into the body but will not be saved to the database.
+     * Image location is currently not saved to the db.
      *
-     * @apiVersion 0.0.2
-     * @apiParam {String} name          Mandatory country name
-     * @apiParam {Number} size          Mandatory country size
-     * @apiParam {Number} population    Mandatory country population size
-     * @apiParam {String} language      Mandatory country main language
-     * @apiParam {String} [donkey]      Optional  country donkey  
+     * @apiVersion 0.2.0
+     * @apiParam {String} name              Mandatory country name
+     * @apiParam {Number} size              Mandatory country size
+     * @apiParam {Number} population        Mandatory country population size
+     * @apiParam {String} [description]     Optional  description of country  
+     * @apiParam {String[]} languages       Mandatory languages spoken in country
+     * @apiParam {String} [imageLocation]   Optional path to countries flag on server
+     * 
      *      
      * @apiParamExample {json} Post-Example:
      *    {
-     *       "name" : <CountryName>,
-     *       "size" : <CountrySize>,
-     *       "population" : <CountryPopulation>,
-     *       "language" : <CountryLanguage>,
-     *       "donkey" : <CountryDonkey>,
+     *       "name" : USA,
+     *       "size" : 9857306,
+     *       "population" : 322014853,
+     *       "imageLocation" : http://travel-project.azurewebsites.net/img/countries/usa-flag.jpg
+     *       "description" : This is a pretty cool country pretty far away from quite a few things. Rumoured to have dragons.,
+     *       "languages" : [English, Spanish],
      *     }
      *
      * @apiSuccess (Success 201) 201 Country Created
@@ -135,7 +131,7 @@ router.route('/countries')
      *     HTTP/1.1 201 Created 
      *     Location : /countries/<ObjectId>
      *     {
-     *       "message": "country added"
+     *       "message": "country :countryName created"
      *     }
      *
      * @apiError (Error 5xx) 500 Internal Server Error 
@@ -158,7 +154,6 @@ router.route('/countries')
         population: req.body.population,
         languages: req.body.languages,
         description: req.body.description,
-        tracks: req.body.tracks,
         imageLocation: req.body.imageLocation     
 
     });
@@ -168,10 +163,10 @@ router.route('/countries')
         if (!err) 
         {
             res.json({
-                "message": "country created"
+                "message": "country " + country.name + " created"
             });
             res.status(201);
-            console.log("country created");
+            console.log("country " + country.name + " created");
         } 
         else 
         {
@@ -188,46 +183,40 @@ router.route('/countries')
  * @api {get} /countries/:id Get Country
  * @apiName GetCountry
  * @apiGroup Countries
- * @apiVersion 0.1.0
+ * @apiVersion 0.2.0
  * @apiDescription by supplying a countries ID you will get all information available to said country. 
- * update includes adding an array of languages. A description for the country and a list of tracks available
- * for that country
+ * Currently that is, name, population, size a description, languages and an image path for that country
  *
  * @apiParam {ObjectId} id Countries unique ID.
  *
  * @apiSuccess {ID} id ID of the country
  * @apiSuccess {String} name  Name of the Country.
- * @apiSuccess {Number} size Size of the Country. Arbitrary. 
- * @apiSuccess {Number} population Population size of the Country.
- * @apiSuccess {String[]} language Array of Languages they speak in that Country.
- * @apiSuccess {String} donkey Random name of a donkey.
- * @apiSuccess {Object[]} tracks contains the track objects related to this country. 
+ * @apiSuccess {Number} size Size of the Country in km2 
+ * @apiSuccess {Number} population Number of people living in the country 
+ * @apiSuccess {String} description Short Description of the Country.
+ * @apiSuccess {String} Location of the countries flag on the server. 
+ * @apiSuccess {String[]} languages Languages they speak in the Country.
  *
- * @apiSuccess (Success 304) 304 Not Modified
  *  
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  * [
  *   {
+ * 
+ *   "_id": "5628d0e8e4b0e09ab41e256c",
+ *  "name": "Denmark",
+ *  "size": ​42915,
+ *   "population": ​5678348,
+ *  "description": "This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty. Test ",
+ *   "imageLocation": "http://travel-project.azurewebsites.net/img/countries/denmark-flag.jpg",
+ *   "languages": 
  *
- *      "_id": "5628d0e8e4b0e09ab41e256c",
- *      "name": "Denmark",
- *      "size": ​3,
- *      "population": ​90,
- *       "description": "This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty.",
- *      "languages": ["Danish", "Swedish"],
- *      "tracks" : [{
- *          "_id": "56436159e4b0ecb0579e3913",
- *          "sport": "Biking",
- *          "trackName": "fynskoven",
- *          "trackType": "Forest",
- *          "region": "Fyn",
- *          "trackRating": ​8,
- *          "km": ​36
+ *   [
+ *       "Danish"
+ *   ]
  *
- * }] 
- * @apiSuccessExample {json} Success-Response (304):
- *     HTTP/1.1 304 Not Modified
+ *   }
+ * ]
  *
  * @apiError 404 Country Not Found
  *
@@ -238,23 +227,27 @@ router.route('/countries/:id')
 
 .get(function(req, res) {
 
-    var country;
 
     //can simply select the fields by typing them, or disclude fields by typing the - in front of the field name. 
     Country.findOne({_id : req.params.id},'-tracks', function(err,country)
     {
-        if(err){
+        if(!country){
             console.log(err);
             res.status(404);
             return res.json({"message " : "Country not found"})
         }
+        else if(err)
+        {
+            console.log(err);
+            res.status(500);
+            return res.json({"message " : "Internal Server Error"});
+        }
         else{
+            res.status(200);
             res.json(country);
         }
     })
-    //Currently the tracks in the country is filled with objectId references. The populate method
-    //will perform an application level join and fill the array with track objects. 
-    //Essentially it joins the collections and selects everything from the two tables. 
+
     // .populate('tracks')
     // .exec(function(err, track)
     // {
@@ -272,9 +265,9 @@ router.route('/countries/:id')
      * @api {put} countries/:id Update Country
      * @apiName UpdateCountry
      * @apiGroup Countries
-     * @apiVersion 0.0.2
+     * @apiVersion 0.2.0
      * @apiDescription Can update a specific country by supplying it's ID. In the method body include the fields you want updated. Only supplying the field you want updated will not delete the other fields. 
-     *
+     * ImageLocation still doesn't work
      * @apiParam {ObjectId} id Country unique ID.
      *
      * @apiSuccess (Success 201) 201 Country Created
@@ -292,7 +285,12 @@ router.route('/countries/:id')
      *      {
      *          "message" : "Internal Server Error"
      *      }
-     * 
+     * @apiError (Error 404) 404 Country Not found 
+     * @apiErrorExample {json} Error-Response:
+     *      HTTP/1.1 404 Country not found
+     *      {
+     *          "message" : "Country not found"
+     *      }
      */
 
 .put(function(req, res) {
@@ -309,6 +307,13 @@ router.route('/countries/:id')
    Country.findOneAndUpdate({_id: req.params.id}, req.body,
     function(err, country)
     {
+        //apparently a better way to check if there is nothing here. !country will include both null and undefined
+        //as well as empty string, 0 NaN and false.
+        if(!country)
+        {
+            res.status(404);
+            return res.json({"message" : "404 country not found"});
+        }
         if(!err)
         {
             console.log("Attempt to edit: " + country.name);
@@ -334,13 +339,18 @@ router.route('/countries/:id')
  *
  * @apiParam {ObjectId} id Country unique ID.
  *
- * @apiSuccess (Success 202) 202 Accepted
+ *
+ * @apiSuccess {ID} id ID of the track.
+ * @apiSuccess {String} sport The sport for this track.
+ * @apiSuccess {String} trackName Name of the Track. 
+ * @apiSuccess {String} trackType The type of track, it's terrain.
+ * @apiSuccess {String} region Region the track is located in.
+ * @apiSuccess {Number} trackRating Rating for this track. 
+ * @apiSuccess {Number} km Distance in kms for this track
+
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 202 Created 
- *     Location : country/<ObjectId>
- *     {
- *       "message": "Country <countryName> has been removed"
- *     }
+ *     L
  *
  * @apiError (Error 5xx) 500 Internal Server Error 
  * @apiErrorExample {json} Error-Response:
@@ -348,13 +358,19 @@ router.route('/countries/:id')
  *      {
  *          "message" : "Internal Server Error"
  *      }
+ * @apiError (Error 404) 404 Country Not found 
+ * @apiErrorExample {json} Error-Response:
+ *      HTTP/1.1 404 Country not found
+ *      {
+ *          "message" : "Country not found"
+ *      }
  */
 .delete(function(req, res) {    
 
     Country.findById(req.params.id, function(err, country)
     {
-        //will this ever be called?
-        if(country === null)
+        
+        if(!country)
         {
             res.status(404);
             return res.json({"message" : "country not found"});
@@ -365,7 +381,6 @@ router.route('/countries/:id')
             res.status(500);
             return res.json({"message" : "Internal Server Error"});
         }
-        
         else
         {
             country.remove(function(err)
@@ -378,6 +393,8 @@ router.route('/countries/:id')
                 }
                 else
                 {
+                    res.status(500);
+                    res.json({"message" : "Country " +  country.name + " could not be removed"});
                     console.log(err);
                 }
             });
@@ -388,38 +405,106 @@ router.route('/countries/:id')
 
 });
 
+
+/**
+ * @api {get} countries/:countryId/tracks Get all tracks per country
+ * @apiName GetCountryTracks
+ * @apiGroup Countries
+ * @apiVersion 0.2.0
+ * @apiDescription Gets all the Tracks from the specified country
+ *
+ * @apiSuccess {ID} id ID of the track
+ * @apiSuccess {String} sport Name of the sport for the track.
+ * @apiSuccess {String} trackName Name of the track. 
+ * @apiSuccess {String} trackType The type of track/terrain. 
+ * @apiSuccess {String} region Region the track is in in the country.
+ * @apiSuccess {Number} trackRating Rating for a given track. 
+ * @apiSuccess {Number} km Distance of the track in km.
+ * @apiSuccess {ObjectId} countryId ID of the country this track belongs to. 
+ *
+ * @apiParam {ObjectId} id Country unique ID.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *  HTTP/1.1 200 OK
+ * [
+ *   "_id": "56431d40e4b0ecb0579e31df",
+ *  "sport": "Biking",
+ *  "trackName": "Somewhere",
+ *  "trackType": "City",
+ *  "region": "Testing",
+ *  "trackRating": ​5,
+ *  "km": ​201,
+ *  "countryId": "5628d0e8e4b0e09ab41e256c"
+ * ]
+ *
+ * @apiError (Error 5xx) 500 Internal Server Error  
+ * @apiError (Error 404) 404 Country Not found 
+
+ */
 router.route('/countries/:id/tracks')
-    
+
     .get(function(req,res)
     {
-        console.log(req.params.id);
-        // Track.where('track.countryId')
-        // .equals(req.params.id)
-        // .exec(function(err,tracks)
-        // {
-        //     if(err)
-        //     {
-        //         return res.json(err);
-        //     }
-        //     else{
-        //         return res.json(tracks);
-        //     }
-        // });
+               
+        Track.find(
+            {countryId : req.params.id },
 
-         Track.find({countryId : req.params.id }, function(err, tracks)
-         {
+        function(err, tracks)
+        {
+            if(!tracks)
+            {
+                res.status(404);
+                return res.json({"message" : "404 no tracks found"});
+            }
             if(err)
             {
-                return res.json(err);
+                res.status(500);
+                return res.json({"message" : "Internal Server Error"});
+                
             }
             else{
+                res.status(200);
                 return res.json(tracks);
             }
-         });
+        });
 
 
     });
 
+/**
+ * @api {get} countries/:countryId/:sport/tracks Countries tracks for a sport
+ * @apiName GetCountryTracksForSport
+ * @apiGroup Countries
+ * @apiVersion 0.2.0
+ * @apiDescription Gets all the Tracks from the specified country from the specified sport
+ *
+ * @apiParam {ObjectId} id Country unique ID.
+ *
+ * @apiSuccess {ID} id ID of the track
+ * @apiSuccess {String} sport Name of the sport for the track.
+ * @apiSuccess {String} trackName Name of the track. 
+ * @apiSuccess {String} trackType The type of track/terrain. 
+ * @apiSuccess {String} region Region the track is in in the country.
+ * @apiSuccess {Number} trackRating Rating for a given track. 
+ * @apiSuccess {Number} km Distance of the track in km.
+ * @apiSuccess {ObjectId} countryId ID of the country this track belongs to. 
+ * @apiSuccessExample {json} Success-Response:
+ *  HTTP/1.1 200 OK
+ * [
+ *   "_id": "56431d40e4b0ecb0579e31df",
+ *  "sport": "Biking",
+ *  "trackName": "Somewhere",
+ *  "trackType": "City",
+ *  "region": "Testing",
+ *  "trackRating": ​5,
+ *  "km": ​201,
+ *  "countryId": "5628d0e8e4b0e09ab41e256c"
+ * ]
+ *
+ * @apiError (Error 5xx) 500 Internal Server Error  
+ * @apiError (Error 404) 404 Country Not found 
+
+ */
 router.route('/countries/:id/:sport/tracks')
     
     .get(function(req,res)

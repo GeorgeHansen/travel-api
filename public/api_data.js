@@ -50,19 +50,62 @@ define({ "api": [
     },
     "success": {
       "fields": {
-        "Success 202": [
+        "Success 200": [
           {
-            "group": "Success 202",
+            "group": "Success 200",
+            "type": "<p>ID</p> ",
             "optional": false,
-            "field": "202",
-            "description": "<p>Accepted</p> "
+            "field": "id",
+            "description": "<p>ID of the track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>The sport for this track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackName",
+            "description": "<p>Name of the Track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackType",
+            "description": "<p>The type of track, it's terrain.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "region",
+            "description": "<p>Region the track is located in.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "trackRating",
+            "description": "<p>Rating for this track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "km",
+            "description": "<p>Distance in kms for this track</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 202 Created \nLocation : country/<ObjectId>\n{\n  \"message\": \"Country <countryName> has been removed\"\n}",
+          "content": "HTTP/1.1 202 Created \nL",
           "type": "json"
         }
       ]
@@ -76,12 +119,25 @@ define({ "api": [
             "field": "500",
             "description": "<p>Internal Server Error</p> "
           }
+        ],
+        "Error 404": [
+          {
+            "group": "Error 404",
+            "optional": false,
+            "field": "404",
+            "description": "<p>Country Not found</p> "
+          }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"message\" : \"Internal Server Error\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Country not found\n{\n    \"message\" : \"Country not found\"\n}",
           "type": "json"
         }
       ]
@@ -95,8 +151,8 @@ define({ "api": [
     "title": "Get all Countries",
     "name": "GetAllCountries",
     "group": "Countries",
-    "description": "<p>Is used to get all the countries currently listed in the database in JSON format. Tracks are stored in the DB as a reference but the tables are joined and data displayed as part of the country. Donkey's have been removed. Description and Tracks added. You can now store multiple Languages per country.</p> ",
-    "version": "0.1.0",
+    "description": "<p>Is used to get all the countries currently listed in the database in JSON format. Tracks are no longer stored in countries. Instead you can find a reference to the country it belongs to in /tracks Donkey's have been removed. Description and Imagelocation added. You can store multiple Languages per country.</p> ",
+    "version": "0.2.0",
     "success": {
       "fields": {
         "Success 200": [
@@ -105,7 +161,7 @@ define({ "api": [
             "type": "<p>ID</p> ",
             "optional": false,
             "field": "id",
-            "description": "<p>ID of the country</p> "
+            "description": "<p>ID of the country.</p> "
           },
           {
             "group": "Success 200",
@@ -119,21 +175,14 @@ define({ "api": [
             "type": "<p>Number</p> ",
             "optional": false,
             "field": "size",
-            "description": "<p>Size of the Country. Arbitrary.</p> "
+            "description": "<p>Size of the Country in km2.</p> "
           },
           {
             "group": "Success 200",
             "type": "<p>Number</p> ",
             "optional": false,
             "field": "population",
-            "description": "<p>Population size of the Country.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String[]</p> ",
-            "optional": false,
-            "field": "languages",
-            "description": "<p>Languages they speak in the Country.</p> "
+            "description": "<p>Number of people living in the country.</p> "
           },
           {
             "group": "Success 200",
@@ -144,17 +193,24 @@ define({ "api": [
           },
           {
             "group": "Success 200",
-            "type": "<p>Object[]</p> ",
+            "type": "<p>String</p> ",
             "optional": false,
-            "field": "tracks",
-            "description": "<p>contains the track objects related to this country.</p> "
+            "field": "Location",
+            "description": "<p>of the countries flag on the server.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String[]</p> ",
+            "optional": false,
+            "field": "languages",
+            "description": "<p>Languages they speak in the Country.</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n     \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n     \"name\": \"Denmark\",\n     \"size\": ​3,\n     \"population\": ​90,\n      \"description\": \"This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty.\",\n     \"languages\": [\"Danish\", \"Swedish\"],\n     \"tracks\" : [{\n         \"_id\": \"56436159e4b0ecb0579e3913\",\n         \"sport\": \"Biking\",\n         \"trackName\": \"fynskoven\",\n         \"trackType\": \"Forest\",\n         \"region\": \"Fyn\",\n         \"trackRating\": ​8,\n         \"km\": ​36\n\n}]",
+          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n  \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n \"name\": \"Denmark\",\n \"size\": ​42915,\n  \"population\": ​5678348,\n \"description\": \"This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty. Test \",\n  \"imageLocation\": \"http://travel-project.azurewebsites.net/img/countries/denmark-flag.jpg\",\n  \"languages\": \n\n  [\n      \"Danish\"\n  ]\n\n  }\n]",
           "type": "json"
         }
       ]
@@ -187,8 +243,8 @@ define({ "api": [
     "title": "Get Country",
     "name": "GetCountry",
     "group": "Countries",
-    "version": "0.1.0",
-    "description": "<p>by supplying a countries ID you will get all information available to said country. update includes adding an array of languages. A description for the country and a list of tracks available for that country</p> ",
+    "version": "0.2.0",
+    "description": "<p>by supplying a countries ID you will get all information available to said country. Currently that is, name, population, size a description, languages and an image path for that country</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -224,55 +280,42 @@ define({ "api": [
             "type": "<p>Number</p> ",
             "optional": false,
             "field": "size",
-            "description": "<p>Size of the Country. Arbitrary.</p> "
+            "description": "<p>Size of the Country in km2</p> "
           },
           {
             "group": "Success 200",
             "type": "<p>Number</p> ",
             "optional": false,
             "field": "population",
-            "description": "<p>Population size of the Country.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String[]</p> ",
-            "optional": false,
-            "field": "language",
-            "description": "<p>Array of Languages they speak in that Country.</p> "
+            "description": "<p>Number of people living in the country</p> "
           },
           {
             "group": "Success 200",
             "type": "<p>String</p> ",
             "optional": false,
-            "field": "donkey",
-            "description": "<p>Random name of a donkey.</p> "
+            "field": "description",
+            "description": "<p>Short Description of the Country.</p> "
           },
           {
             "group": "Success 200",
-            "type": "<p>Object[]</p> ",
+            "type": "<p>String</p> ",
             "optional": false,
-            "field": "tracks",
-            "description": "<p>contains the track objects related to this country.</p> "
-          }
-        ],
-        "Success 304": [
+            "field": "Location",
+            "description": "<p>of the countries flag on the server.</p> "
+          },
           {
-            "group": "Success 304",
+            "group": "Success 200",
+            "type": "<p>String[]</p> ",
             "optional": false,
-            "field": "304",
-            "description": "<p>Not Modified</p> "
+            "field": "languages",
+            "description": "<p>Languages they speak in the Country.</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n     \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n     \"name\": \"Denmark\",\n     \"size\": ​3,\n     \"population\": ​90,\n      \"description\": \"This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty.\",\n     \"languages\": [\"Danish\", \"Swedish\"],\n     \"tracks\" : [{\n         \"_id\": \"56436159e4b0ecb0579e3913\",\n         \"sport\": \"Biking\",\n         \"trackName\": \"fynskoven\",\n         \"trackType\": \"Forest\",\n         \"region\": \"Fyn\",\n         \"trackRating\": ​8,\n         \"km\": ​36\n\n}]",
-          "type": "json"
-        },
-        {
-          "title": "Success-Response (304):",
-          "content": "HTTP/1.1 304 Not Modified",
+          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n  \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n \"name\": \"Denmark\",\n \"size\": ​42915,\n  \"population\": ​5678348,\n \"description\": \"This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty. Test \",\n  \"imageLocation\": \"http://travel-project.azurewebsites.net/img/countries/denmark-flag.jpg\",\n  \"languages\": \n\n  [\n      \"Danish\"\n  ]\n\n  }\n]",
           "type": "json"
         }
       ]
@@ -301,13 +344,239 @@ define({ "api": [
     "groupTitle": "Countries"
   },
   {
+    "type": "get",
+    "url": "countries/:countryId/tracks",
+    "title": "Get all tracks per country",
+    "name": "GetCountryTracks",
+    "group": "Countries",
+    "version": "0.2.0",
+    "description": "<p>Gets all the Tracks from the specified country</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>ID</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of the track</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>Name of the sport for the track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackName",
+            "description": "<p>Name of the track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackType",
+            "description": "<p>The type of track/terrain.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "region",
+            "description": "<p>Region the track is in in the country.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "trackRating",
+            "description": "<p>Rating for a given track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "km",
+            "description": "<p>Distance of the track in km.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>ObjectId</p> ",
+            "optional": false,
+            "field": "countryId",
+            "description": "<p>ID of the country this track belongs to.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n[\n  \"_id\": \"56431d40e4b0ecb0579e31df\",\n \"sport\": \"Biking\",\n \"trackName\": \"Somewhere\",\n \"trackType\": \"City\",\n \"region\": \"Testing\",\n \"trackRating\": ​5,\n \"km\": ​201,\n \"countryId\": \"5628d0e8e4b0e09ab41e256c\"\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>ObjectId</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Country unique ID.</p> "
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 5xx": [
+          {
+            "group": "Error 5xx",
+            "optional": false,
+            "field": "500",
+            "description": "<p>Internal Server Error</p> "
+          }
+        ],
+        "Error 404": [
+          {
+            "group": "Error 404",
+            "optional": false,
+            "field": "404",
+            "description": "<p>Country Not found</p> "
+          }
+        ]
+      }
+    },
+    "filename": "./routes/countries.js",
+    "groupTitle": "Countries"
+  },
+  {
+    "type": "get",
+    "url": "countries/:countryId/:sport/tracks",
+    "title": "Countries tracks for a sport",
+    "name": "GetCountryTracksForSport",
+    "group": "Countries",
+    "version": "0.2.0",
+    "description": "<p>Gets all the Tracks from the specified country from the specified sport</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>ObjectId</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Country unique ID.</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>ID</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of the track</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>Name of the sport for the track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackName",
+            "description": "<p>Name of the track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackType",
+            "description": "<p>The type of track/terrain.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "region",
+            "description": "<p>Region the track is in in the country.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "trackRating",
+            "description": "<p>Rating for a given track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "km",
+            "description": "<p>Distance of the track in km.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>ObjectId</p> ",
+            "optional": false,
+            "field": "countryId",
+            "description": "<p>ID of the country this track belongs to.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n[\n  \"_id\": \"56431d40e4b0ecb0579e31df\",\n \"sport\": \"Biking\",\n \"trackName\": \"Somewhere\",\n \"trackType\": \"City\",\n \"region\": \"Testing\",\n \"trackRating\": ​5,\n \"km\": ​201,\n \"countryId\": \"5628d0e8e4b0e09ab41e256c\"\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 5xx": [
+          {
+            "group": "Error 5xx",
+            "optional": false,
+            "field": "500",
+            "description": "<p>Internal Server Error</p> "
+          }
+        ],
+        "Error 404": [
+          {
+            "group": "Error 404",
+            "optional": false,
+            "field": "404",
+            "description": "<p>Country Not found</p> "
+          }
+        ]
+      }
+    },
+    "filename": "./routes/countries.js",
+    "groupTitle": "Countries"
+  },
+  {
     "type": "put",
     "url": "countries/:id",
     "title": "Update Country",
     "name": "UpdateCountry",
     "group": "Countries",
-    "version": "0.0.2",
-    "description": "<p>Can update a specific country by supplying it's ID. In the method body include the fields you want updated. Only supplying the field you want updated will not delete the other fields.</p> ",
+    "version": "0.2.0",
+    "description": "<p>Can update a specific country by supplying it's ID. In the method body include the fields you want updated. Only supplying the field you want updated will not delete the other fields. ImageLocation still doesn't work</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -349,12 +618,25 @@ define({ "api": [
             "field": "500",
             "description": "<p>Internal Server Error</p> "
           }
+        ],
+        "Error 404": [
+          {
+            "group": "Error 404",
+            "optional": false,
+            "field": "404",
+            "description": "<p>Country Not found</p> "
+          }
         ]
       },
       "examples": [
         {
           "title": "Error-Response:",
           "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"message\" : \"Internal Server Error\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 404 Country not found\n{\n    \"message\" : \"Country not found\"\n}",
           "type": "json"
         }
       ]
@@ -368,8 +650,8 @@ define({ "api": [
     "title": "Create Country",
     "name": "createCountry",
     "group": "Countries",
-    "description": "<p>Is used to create a new country. Fields other than those specified can be entered into the body but will not be saved to the database.</p> ",
-    "version": "0.0.2",
+    "description": "<p>Is used to create a new country. Image location is currently not saved to the db.</p> ",
+    "version": "0.2.0",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -397,23 +679,30 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
+            "optional": true,
+            "field": "description",
+            "description": "<p>Optional  description of country</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String[]</p> ",
             "optional": false,
-            "field": "language",
-            "description": "<p>Mandatory country main language</p> "
+            "field": "languages",
+            "description": "<p>Mandatory languages spoken in country</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": true,
-            "field": "donkey",
-            "description": "<p>Optional  country donkey</p> "
+            "field": "imageLocation",
+            "description": "<p>Optional path to countries flag on server</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Post-Example:",
-          "content": "{\n   \"name\" : <CountryName>,\n   \"size\" : <CountrySize>,\n   \"population\" : <CountryPopulation>,\n   \"language\" : <CountryLanguage>,\n   \"donkey\" : <CountryDonkey>,\n }",
+          "content": "{\n   \"name\" : USA,\n   \"size\" : 9857306,\n   \"population\" : 322014853,\n   \"imageLocation\" : http://travel-project.azurewebsites.net/img/countries/usa-flag.jpg\n   \"description\" : This is a pretty cool country pretty far away from quite a few things. Rumoured to have dragons.,\n   \"languages\" : [English, Spanish],\n }",
           "type": "json"
         }
       ]
@@ -432,7 +721,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 Created \nLocation : /countries/<ObjectId>\n{\n  \"message\": \"country added\"\n}",
+          "content": "HTTP/1.1 201 Created \nLocation : /countries/<ObjectId>\n{\n  \"message\": \"country :countryName created\"\n}",
           "type": "json"
         }
       ]
@@ -458,5 +747,210 @@ define({ "api": [
     },
     "filename": "./routes/countries.js",
     "groupTitle": "Countries"
+  },
+  {
+    "type": "get",
+    "url": "/tracks/",
+    "title": "Get all Tracks",
+    "name": "GetAlltracks",
+    "group": "Tracks",
+    "description": "<p>Is used to get all the tracks currently listed in the database in JSON format. Tracks contain a reference to the country they belong to. Not all tracks have been added to countries.</p> ",
+    "version": "0.1.0",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>ID</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of the track</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>Name of the sport for the track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackName",
+            "description": "<p>Name of the track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackType",
+            "description": "<p>The type of track/terrain.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "region",
+            "description": "<p>Region the track is in in the country.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "trackRating",
+            "description": "<p>Rating for a given track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "km",
+            "description": "<p>Distance of the track in km.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>ObjectId</p> ",
+            "optional": false,
+            "field": "countryId",
+            "description": "<p>ID of the country this track belongs to.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n[\n  \"_id\": \"56431d40e4b0ecb0579e31df\",\n \"sport\": \"Biking\",\n \"trackName\": \"Somewhere\",\n \"trackType\": \"City\",\n \"region\": \"Testing\",\n \"trackRating\": ​5,\n \"km\": ​201,\n \"countryId\": \"5628d0e8e4b0e09ab41e256c\"\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 5xx": [
+          {
+            "group": "Error 5xx",
+            "optional": false,
+            "field": "500",
+            "description": "<p>Internal Server Error</p> "
+          }
+        ]
+      }
+    },
+    "filename": "./routes/tracks.js",
+    "groupTitle": "Tracks"
+  },
+  {
+    "type": "get",
+    "url": "/tracks/:id",
+    "title": "Get Track",
+    "name": "GetTrack",
+    "group": "Tracks",
+    "version": "0.2.0",
+    "description": "<p>by supplying a tracks ID you will get all information available to said track.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>ObjectId</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Tracks unique ID.</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>ID</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of the track</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "sport",
+            "description": "<p>Name of the sport for the track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackName",
+            "description": "<p>Name of the track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "trackType",
+            "description": "<p>The type of track/terrain.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "region",
+            "description": "<p>Region the track is in in the country.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "trackRating",
+            "description": "<p>Rating for a given track.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "km",
+            "description": "<p>Distance of the track in km.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>ObjectId</p> ",
+            "optional": false,
+            "field": "countryId",
+            "description": "<p>ID of the country this track belongs to.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": " HTTP/1.1 200 OK\n[\n  \"_id\": \"56431d40e4b0ecb0579e31df\",\n \"sport\": \"Biking\",\n \"trackName\": \"Somewhere\",\n \"trackType\": \"City\",\n \"region\": \"Testing\",\n \"trackRating\": ​5,\n \"km\": ​201,\n \"countryId\": \"5628d0e8e4b0e09ab41e256c\"\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "404",
+            "description": "<p>Track Not Found</p> "
+          }
+        ],
+        "Error 5xx": [
+          {
+            "group": "Error 5xx",
+            "optional": false,
+            "field": "500",
+            "description": "<p>Internal Server Error</p> "
+          }
+        ]
+      }
+    },
+    "filename": "./routes/tracks.js",
+    "groupTitle": "Tracks"
   }
 ] });

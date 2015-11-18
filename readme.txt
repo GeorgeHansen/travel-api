@@ -13,6 +13,9 @@ https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
 Database design
 http://blog.mongodb.org/post/87200945828/6-rules-of-thumb-for-mongodb-schema-design-part-1
 
+Interesting Node/Mongoose/Express API article
+http://aleksandrov.ws/2013/09/12/restful-api-with-nodejs-plus-mongodb/
+
 To install plugins for sublimeText
 First install package control
 https://packagecontrol.io/installation#st2

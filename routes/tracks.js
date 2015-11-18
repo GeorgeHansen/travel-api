@@ -19,9 +19,41 @@ var Track = require('../models/track');
 //config files
 var database = require('../config/database.js');
 
-//really need to learn how I should be disconnecting from the db. 
-//mongoose.connect(database.url);
+//really need to learn how I should be disconnecting from the db. is it done automatically?
 
+/**
+ * @api {get} /tracks/ Get all Tracks
+ * @apiName GetAlltracks
+ * @apiGroup Tracks
+ * @apiDescription Is used to get all the tracks currently listed in the database in JSON format. 
+ * Tracks contain a reference to the country they belong to. Not all tracks have been added to countries.
+ *
+ * @apiVersion 0.1.0
+ *
+ * @apiSuccess {ID} id ID of the track
+ * @apiSuccess {String} sport Name of the sport for the track.
+ * @apiSuccess {String} trackName Name of the track. 
+ * @apiSuccess {String} trackType The type of track/terrain. 
+ * @apiSuccess {String} region Region the track is in in the country.
+ * @apiSuccess {Number} trackRating Rating for a given track. 
+ * @apiSuccess {Number} km Distance of the track in km.
+ * @apiSuccess {ObjectId} countryId ID of the country this track belongs to. 
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *  HTTP/1.1 200 OK
+ * [
+ *   "_id": "56431d40e4b0ecb0579e31df",
+ *  "sport": "Biking",
+ *  "trackName": "Somewhere",
+ *  "trackType": "City",
+ *  "region": "Testing",
+ *  "trackRating": ​5,
+ *  "km": ​201,
+ *  "countryId": "5628d0e8e4b0e09ab41e256c"
+ * ]
+
+ * @apiError (Error 5xx) 500 Internal Server Error 
+ **/
 router.route('/tracks')
 
     .get(function(req, res) {
@@ -40,37 +72,62 @@ router.route('/tracks')
     });
 
 
-router.route('/tracks/country/:countryId/')
+/**
+ * @api {get} /tracks/:id Get Track
+ * @apiName GetTrack
+ * @apiGroup Tracks
+ * @apiVersion 0.2.0
+ * @apiDescription by supplying a tracks ID you will get all information available to said track. 
 
-.get(function(req, res)
-{
-    //there is probably a better way to do the where clause. Using where then .equals didnt seem to work though
-    Track.find({}).where("countryId =="+ req.params.countryId)   
-    .exec(function(err,tracks)
-    {
-        if(err)
-        {
-            return res.json(err);
-        }
-        else{
-            return res.json(tracks);
-        }
-    });
-});
-
+ *
+ * @apiParam {ObjectId} id Tracks unique ID.
+ *
+ * @apiSuccess {ID} id ID of the track
+ * @apiSuccess {String} sport Name of the sport for the track.
+ * @apiSuccess {String} trackName Name of the track. 
+ * @apiSuccess {String} trackType The type of track/terrain. 
+ * @apiSuccess {String} region Region the track is in in the country.
+ * @apiSuccess {Number} trackRating Rating for a given track. 
+ * @apiSuccess {Number} km Distance of the track in km.
+ * @apiSuccess {ObjectId} countryId ID of the country this track belongs to. 
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *  HTTP/1.1 200 OK
+ * [
+ *   "_id": "56431d40e4b0ecb0579e31df",
+ *  "sport": "Biking",
+ *  "trackName": "Somewhere",
+ *  "trackType": "City",
+ *  "region": "Testing",
+ *  "trackRating": ​5,
+ *  "km": ​201,
+ *  "countryId": "5628d0e8e4b0e09ab41e256c"
+ * ]
+ *
+ * @apiError 404 Track Not Found
+ *
+ * @apiError (Error 5xx) 500 Internal Server Error 
+ **/
 router.route('/tracks/:id/')
 
     .get(function(req, res)
     {
         Track.findOne({_id : req.params.id}, function(err,track)
         {
-            if(err)
+            
+            if(!track)
+            {
+                res.status(404);
+                return res.json({"message" : "Track not found"});
+            }
+            else if(err)
             {
                 console.log(err);
                 res.status(500);
                 return res.json({"message" : "Internal Server Error"});
             }
             else{
+                res.status(200);
                 res.json(track);
             }
 
@@ -78,7 +135,7 @@ router.route('/tracks/:id/')
     });
 
 
-
+//router.route('/tracks/:sport')
 
 
 
