@@ -82,7 +82,7 @@ router.route('/countries')
        //Have tracks in the schema from a previous version. We don't want to display them.
        //A better solution would be to use the version key mongoose uses.
        //This way we'd only display countries from a certain db version.  
-       Country.find({},'-tracks',function(err, countries) {
+       Country.find({},'-tracks -__v',function(err, countries) {
             if(err) {
                 console.log(err);
                 res.status(500);
@@ -204,10 +204,10 @@ router.route('/countries')
  *   {
  * 
  *   "_id": "5628d0e8e4b0e09ab41e256c",
- *  "name": "Denmark",
- *  "size": ​42915,
+ *   "name": "Denmark",
+ *   "size": ​42915,
  *   "population": ​5678348,
- *  "description": "This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty. Test ",
+ *   "description": "This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty. Test ",
  *   "imageLocation": "http://travel-project.azurewebsites.net/img/countries/denmark-flag.jpg",
  *   "languages": 
  *
@@ -229,7 +229,7 @@ router.route('/countries/:id')
 
 
     //can simply select the fields by typing them, or disclude fields by typing the - in front of the field name. 
-    Country.findOne({_id : req.params.id},'-tracks', function(err,country)
+    Country.findOne({_id : req.params.id},'-tracks -__v', function(err,country)
     {
         if(!country){
             console.log(err);

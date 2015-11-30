@@ -17,6 +17,12 @@
 
 	Very good read on designing schema's in mongodb
 
+	https://docs.mongodb.org/manual/reference/sql-comparison/
+
+	TO Read
+	https://www.kidscodecs.com/database-design/
+	http://theholmesoffice.com/mongoose-connection-best-practice/ 
+
 */
 
 

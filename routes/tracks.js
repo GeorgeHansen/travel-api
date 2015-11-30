@@ -10,12 +10,6 @@ var router = express.Router();
 var Country = require('../models/country');
 var Track = require('../models/track');
 
-//do we need this here? Maybe not. COMMENT OUT!!!
-// app.use(bodyParser.urlencoded({
-//     extended: true
-// }));
-// app.use(bodyParser.json());
-
 //config files
 var database = require('../config/database.js');
 
@@ -69,7 +63,42 @@ router.route('/tracks')
             	res.json(tracks);
             }
         });
+    })
+    .post(function(req,res)
+    {
+        var track;
+        console.log(req.body);
+
+    track = new Track({
+        sport: req.body.sport,
+        trackName: req.body.trackName,
+        trackType: req.body.trackType,
+        region: req.body.region,
+        trackRating: req.body.trackRating,
+        km: req.body.km,
+        countryId: req.body.countryId 
+
     });
+
+    track.save(function(err)
+    {
+        if (!err) 
+        {
+            res.json({
+                "message": "track for " + track.sport + " created"
+            });
+            res.status(201);
+            console.log("track for " + track.sport + " created");
+        } 
+        else 
+        {
+            res.status(500);
+            return res.json({ "message": "Internal Server Error"});
+            console.log(err);
+        }
+    });
+    });
+
 
 
 /**

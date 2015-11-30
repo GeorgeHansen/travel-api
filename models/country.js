@@ -32,14 +32,8 @@ var countrySchema = new Schema({
 	population: 	{  type: Number, min: 0, required: true},
 	description: 	{  type: String, required: false},
 	languages:  	[{ type: String, required: true}], 
-	tracks:  		[{ type: Schema.ObjectId, ref: 'Track', required: false}],
-	imageLocation: 	{ type: String, required:false}
+	imageLocation: 	{  type: String, required: false}
 
-},
- {
-    versionKey: false 
-    // Just set this to false so we wouldn't see it in the JSON files. Probably very smart to have it. 
-    // Will probably enable it when I've figured out why it was stupid to turn it off. 
 });
 
 

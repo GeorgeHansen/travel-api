@@ -9,12 +9,14 @@ http://adam-back.azurewebsites.net/deploy-a-mean-app-on-azure/
 Mongoose tutorial
 https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
 
-
 Database design
 http://blog.mongodb.org/post/87200945828/6-rules-of-thumb-for-mongodb-schema-design-part-1
 
 Interesting Node/Mongoose/Express API article
 http://aleksandrov.ws/2013/09/12/restful-api-with-nodejs-plus-mongodb/
+
+Authenticating 
+https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
 
 To install plugins for sublimeText
 First install package control
