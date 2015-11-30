@@ -44,6 +44,7 @@ var cors            = require('cors');
 //Route Requires====================================================
 var countries       = require('./routes/countries.js');
 var tracks          = require('./routes/tracks.js');
+var bookings        = require('./routes/bookings.js');
 
 
 //Middleware Mounting ==============================================
@@ -63,6 +64,7 @@ app.use(bodyParser.json());
 
 app.use(countries);
 app.use(tracks);
+app.use(bookings);
 
 
 var port = process.env.PORT || 3000;

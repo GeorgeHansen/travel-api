@@ -60,4 +60,8 @@ router.route('/booking/:id')
 	.get(function(req,res)
 	{
 
+
 	});
+
+
+module.exports = router;
