@@ -7,8 +7,8 @@ var bookingSchema = new Schema({
 
 	username: 		{  type: String, required: true},
 	email: 			{  type: String, required: true},
-	fromDate: 		{  type: Date, default: Date.now, required:false},
-	toDate: 		{  type: Date, default: Date.now, required:false},
+	fromDate: 		{  type: String, required:false},
+	toDate: 		{  type: String, required:false},
 
 });
 
