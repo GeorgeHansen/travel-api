@@ -1,5 +1,135 @@
 define({ "api": [
   {
+    "type": "get",
+    "url": "/bookings/",
+    "title": "Get all Bookings",
+    "name": "GetAllBookings",
+    "group": "Bookings",
+    "description": "<p>Is used to get all the bookings currently in the database in JSON format. Just quickly threw something up there to have it. Dates are a little weird atm. You can leave them blank for the current date</p> ",
+    "version": "0.2.0",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>ID</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of the booking.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Username of the person doing the booking.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "email",
+            "description": "<p>email address for person doing the booking.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Date</p> ",
+            "optional": false,
+            "field": "fromDate.",
+            "description": "<p>Date booking starts from</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Date</p> ",
+            "optional": false,
+            "field": "toDate",
+            "description": "<p>Date booking ends.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n\n \"_id\": \"565d82e58eaa68c014dc550e\",\n \"username\": \"Test\",\n \"email\": \"test@test.com\",\n \"toDate\": \"2015-12-01T11:22:41.239Z\",\n \"fromDate\": \"2015-12-01T11:22:41.239Z\"\n\n  }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 5xx": [
+          {
+            "group": "Error 5xx",
+            "optional": false,
+            "field": "500",
+            "description": "<p>Internal Server Error</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"message\" : \"Internal Server Error\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./routes/bookings.js",
+    "groupTitle": "Bookings"
+  },
+  {
+    "type": "post",
+    "url": "/bookings/",
+    "title": "Create Booking",
+    "name": "createBooking",
+    "group": "Bookings",
+    "description": "<p>Is used to create a new booking. Dates are optional. If nothing is entered current date will be used.</p> ",
+    "version": "0.2.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Mandatory userName for booking</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Mandatory userEmail for booking</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Date</p> ",
+            "optional": true,
+            "field": "fromDate",
+            "description": "<p>Optional starting date for booking</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": true,
+            "field": "toDate",
+            "description": "<p>Optional  ending date for booking</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Post-Example:",
+          "content": "[\n  {\n\n\n \"_id\": \"565d82e58eaa68c014dc550e\",\n \"username\": \"Test\",\n \"email\": \"test@test.com\",\n \"toDate\": \"2015-12-01T11:22:41.239Z\",\n \"fromDate\": \"2015-12-01T11:22:41.239Z\"\n\n  }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./routes/bookings.js",
+    "groupTitle": "Bookings"
+  },
+  {
     "success": {
       "fields": {
         "Success 200": [
@@ -315,7 +445,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n  \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n \"name\": \"Denmark\",\n \"size\": ​42915,\n  \"population\": ​5678348,\n \"description\": \"This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty. Test \",\n  \"imageLocation\": \"http://travel-project.azurewebsites.net/img/countries/denmark-flag.jpg\",\n  \"languages\": \n\n  [\n      \"Danish\"\n  ]\n\n  }\n]",
+          "content": "    HTTP/1.1 200 OK\n[\n  {\n\n  \"_id\": \"5628d0e8e4b0e09ab41e256c\",\n  \"name\": \"Denmark\",\n  \"size\": ​42915,\n  \"population\": ​5678348,\n  \"description\": \"This is Denmark. The flag is pretty nifty. The weather a bit drifty. but give the people a fifty and they'll look at you shifty. Test \",\n  \"imageLocation\": \"http://travel-project.azurewebsites.net/img/countries/denmark-flag.jpg\",\n  \"languages\": \n\n  [\n      \"Danish\"\n  ]\n\n  }\n]",
           "type": "json"
         }
       ]
