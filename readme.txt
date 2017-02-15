@@ -1,4 +1,5 @@
-readme.txt
+Small API for use in a travel booking style web application. 
+
 
 Talks about how to structure your MEAN projects
 https://scotch.io/tutorials/node-and-angular-to-do-app-application-organization-and-structure
